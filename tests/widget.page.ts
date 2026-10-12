@@ -1,7 +1,7 @@
 import {Locator, Page} from "@playwright/test";
 
 enum WidgetPageSelectors {
-    WRAPPER = '[class^=widget__]:has([data-test=openWidget])',
+    WRAPPER = '.sc-dino-typography-h > [class^=widget__]',
     WIDGET_BODY = '[class^=widgetWrapper] > [class^=widget__]',
     HEADER_TEXT = 'header h5',
     BUTTON_OPEN = '[data-test=openWidget]',
@@ -62,3 +62,4 @@ export class WidgetPage {
         return this.wrapper().locator(WidgetPage.selector.SEARCH_RESULTS_ITEM);
     }
 }
+
