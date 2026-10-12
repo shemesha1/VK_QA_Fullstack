@@ -11,7 +11,7 @@ test.describe('Uchi.ru widget ', () => {
     await page.goto('/');
 
     // close cookies popup
-    await page.click('._UCHI_COOKIE__button');
+    await page.locator('._UCHI_COOKIE__button:visible').click();
   });
 
   test('opens', async ({page}) => {
@@ -29,6 +29,21 @@ test.describe('Uchi.ru widget ', () => {
 
     await widgetPage.clickWriteToUs();
 
-    expect(await widgetPage.getTitle()).toEqual('Связь с поддержкой');
+    await expect(widgetPage.title()).toHaveText('Связь с поддержкой');
+  });
+
+  test('finds articles by search query', async () => {
+    await widgetPage.openWidget();
+
+    await widgetPage.search('пароль');
+
+    const resultsTitle = widgetPage.searchResultsTitle();
+    await expect(resultsTitle).toHaveText(/^Нашл\S* \d+ стат/);
+
+    const found = Number((await resultsTitle.textContent())!.match(/\d+/)![0]);
+    expect(found).toBeGreaterThan(0);
+    await expect(widgetPage.searchResults()).toHaveCount(found);
+
+    await expect(widgetPage.searchResults().filter({ hasText: /пароль/i }).first()).toBeVisible();
   });
 });
